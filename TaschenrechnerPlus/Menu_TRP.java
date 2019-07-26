@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class Menu_TRP {
 	private static JTextArea[] Textfelder_Plotter = new JTextArea[8]; // Für das Plottermenü
 	private static JTextArea[] Textfelder_linregx = new JTextArea[10]; // Für die x-Werte der linearen Regression
 	private static JTextArea[] Textfelder_linregy = new JTextArea[10]; // Für die y-Werte der linearen Regression
+	private static JTextArea[] Textfelder_Umrechner = new JTextArea[3]; // Für die Umrechnerklasse
 
 	// Globale JFrame und JPanel, wenn ein Fenster
 	// geschlossen und ein anderes aufgemacht werden soll.
@@ -74,13 +76,23 @@ public class Menu_TRP {
 	private static double[] Die_linregy = new double[] { lry0, lry1, lry2, lry3, lry4, lry5, lry6, lry7, lry8, lry9,
 			lry10 };
 
+	// Variablen für den Umrechner
+	static String ur1, ur2;
+	static double ur3;
+	private static double[] Die_Umrechner = new double[] { ur3 };
+	private static String[] Die_Umrechner_string = new String[] { ur1, ur2 };
+
+	// Variablen für den GgT und KgV
+	static int gka, gkb;
+	private static int[] Die_Teiler = new int[] { gka, gkb };
+
 	public static void starten() {
 		// Erstelle Fenster mit globalem f und p, setze Größe und Farbe usw.
 		fenster(f, 300, 350, "Auswahlmenü", azure3, p, false, 0, 0);
 		p.setBackground(azure3);
 
 		// Knöpfe des Auswahlmenüs
-		JButton knopf1 = new JButton("Primfaktorzerlegung");
+		JButton knopf1 = new JButton("GgT und KgV");
 		JButton knopf2 = new JButton("Ableitungen von Polynomen");
 		JButton knopf3 = new JButton("Umrechner");
 		JButton knopf4 = new JButton("Integrale von Polynomen");
@@ -119,6 +131,16 @@ public class Menu_TRP {
 
 		});
 
+		knopf1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				schließen(f);
+				saub(p);
+				GgTKgV();
+			}
+		});
+
 		knopf2.addActionListener(new ActionListener() {
 
 			@Override
@@ -133,7 +155,9 @@ public class Menu_TRP {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				schließen(f);
+				saub(p);
+				umrechner();
 			}
 
 		});
@@ -194,6 +218,115 @@ public class Menu_TRP {
 		});
 	}
 
+	// Größter gemeinsamer Teiler und Kleinstes gemeinsames Vielfaches
+	public static void GgTKgV() {
+		saub(p); // Als Sicherheit nochmals den Panel säubern
+		fenster(f, 350, 230, "GgT und KgV", azure3, p, false, 0, 0);
+		p.setBackground(azure3);
+
+		// Deklariere alle wichtigen Variablen usw. und füge die Textfelder und JLabel
+		// an die richtigen Stellen
+		JPanel p1 = new JPanel();
+		JFrame f1 = new JFrame();
+		JPanel p11 = new JPanel();
+		JFrame f11 = new JFrame();
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = new Insets(5, 5, 5, 5);
+
+		JButton knopf1 = new JButton("GgT und KgV");
+		JButton knopf2 = new JButton("Zurück zum Hauptmenü");
+
+		JLabel l1 = new JLabel("Größere Zahl: ");
+		JLabel l2 = new JLabel("Kleinere Zahl: ");
+
+		JTextArea txt1 = new JTextArea(1, 8);
+		txt1.setMinimumSize(new Dimension(40, 15));
+		JTextArea txt2 = new JTextArea(1, 8);
+		txt2.setMinimumSize(new Dimension(40, 15));
+		p.add(l1, c);
+		c.gridx = 1;
+		p.add(txt1, c);
+
+		c.gridx = 0;
+		c.gridy = 1;
+		p.add(l2, c);
+		c.gridx = 1;
+		p.add(txt2, c);
+
+		c.gridx = 0;
+		c.gridy = 2;
+		p.add(knopf1, c);
+		c.gridx = 1;
+		p.add(knopf2, c);
+
+		knopf1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Säubern und schließen der Fenster und panel, damit keine Duplikate entstehen
+				// bei mehrfachem Klicken des Berechne Buttons
+				saub(p1);
+				saub(p11);
+				schließen(f1);
+				schließen(f11);
+				try {
+					Die_Teiler[0] = Integer.parseInt(txt1.getText());
+					Die_Teiler[1] = Integer.parseInt(txt2.getText());
+					// Die Berechnung der GgT ist einfacher, wenn die erste Zahl größer ist als die
+					// zweite
+					if (Die_Teiler[0] < Die_Teiler[1]) {
+						throw new Exception();
+					}
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(f, "Irgendetwas ist schief gelaufen!", "Fehler",
+							JOptionPane.ERROR_MESSAGE);
+					schalter = false;
+				}
+
+				if (schalter) {
+					GgT_und_KgV gk = new GgT_und_KgV(Die_Teiler[0], Die_Teiler[1]);
+					gk.berech();
+
+					fenster(f1, 350, 100, "Größter gemeinsamer Teiler", azure2, p1, true, 300, 423);
+					JLabel l11 = new JLabel("GgT: " + Integer.toString(gk.getGgT()));
+					l11.setFont(l11.getFont().deriveFont(18.0f));
+					p1.add(l11);
+
+					fenster(f11, 350, 100, "Kleinstes gemeinsames Vielfaches", azure2, p11, true, 636, 423);
+					JLabel l12 = new JLabel("KgV: " + Integer.toString(gk.getKgV()));
+					l12.setFont(l12.getFont().deriveFont(18.0f));
+					p11.add(l12);
+				} else {
+					schließen(f);
+					saub(p);
+					schalter = true;
+					GgTKgV();
+				}
+
+			}
+
+		});
+
+		knopf2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				schließen(f);
+				saub(p);
+				saub(p1);
+				saub(p11);
+				schließen(f1);
+				schließen(f11);
+				starten();
+			}
+
+		});
+	}
+
 	// Plotterklasse
 	public static void plotte() {
 		saub(p); // Als Sicherheit nochmals den Panel säubern
@@ -231,7 +364,7 @@ public class Menu_TRP {
 		Textfelder_Plotter[7] = txt;
 		p.add(txt, c);
 
-		// Die Buttons Zurück zum Auswahlemenü und Ableiten werden dem panel hinzugefügt
+		// Die Buttons Zurück zum Auswahlemenü und Plotten werden dem panel hinzugefügt
 		JButton knopf1 = new JButton("Zurück zum Auswahlmenü");
 		JButton knopf2 = new JButton("Plotten");
 
@@ -408,9 +541,9 @@ public class Menu_TRP {
 
 	// Klasse für die Nullstellen
 	public static void nullstelle() {
-		// Nullstellenfesnter
+		// Nullstellenfenster
 		saub(p);
-		fenster(f, 380, 200, "Nullstellenrechner", azure3, p, true, 530, 100);
+		fenster(f, 380, 200, "Nullstellenrechner", azure3, p, false, 0, 0);
 		p.setBackground(azure3);
 
 		// Nullstellenberechnungsfenster
@@ -456,6 +589,8 @@ public class Menu_TRP {
 				schließen(fst);
 				saub(pnn);
 				schließen(fstt);
+				saub(p);
+				schließen(f);
 				fenster(fst, 650, 110, "Polynom 1. Grades", azure3, pn, true, 530, 290);
 
 				JLabel l1 = new JLabel(" *x + ");
@@ -504,6 +639,8 @@ public class Menu_TRP {
 				schließen(fst);
 				saub(pnn);
 				schließen(fstt);
+				saub(p);
+				schließen(f);
 				fenster(fst, 750, 110, "Polynom 2. Grades", azure3, pn, true, 530, 290);
 
 				JLabel l1 = new JLabel(" *x^2 + ");
@@ -677,7 +814,7 @@ public class Menu_TRP {
 			}
 		});
 
-		//Plotter für das Polynom 1. Grades
+		// Plotter für das Polynom 1. Grades
 		knopf6.addActionListener(new ActionListener() {
 
 			@Override
@@ -713,7 +850,7 @@ public class Menu_TRP {
 			}
 		});
 
-		//Plotter für das Polynom 2. Grades
+		// Plotter für das Polynom 2. Grades
 		knopf7.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -747,7 +884,7 @@ public class Menu_TRP {
 			}
 		});
 
-		//Zurück zum Nullstellenrechner
+		// Zurück zum Nullstellenrechner
 		knopf8.addActionListener(new ActionListener() {
 
 			@Override
@@ -756,6 +893,125 @@ public class Menu_TRP {
 				schließen(fst);
 				saub(pnn);
 				schließen(fstt);
+
+				nullstelle();
+			}
+
+		});
+	}
+
+	// Umrechnerklasse
+	public static void umrechner() {
+		saub(p);
+		fenster(f, 400, 250, "Umrechner", azure3, p, false, 0, 0);
+		p.setBackground(azure3);
+
+		// Deklariere alles wichtige, setzte alles an seinen richtigen Platz im JPanel
+		JPanel p1 = new JPanel();
+		JFrame f1 = new JFrame();
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(5, 5, 5, 5);
+
+		JLabel l1 = new JLabel("Von");
+		JLabel l2 = new JLabel("Zu");
+		JLabel l3 = new JLabel("Eingabe");
+
+		JButton knopf1 = new JButton("Zurück zum Hauptmenü");
+		JButton knopf2 = new JButton("Berechne");
+
+		// Feld zur Überprüfung, ob der User auch die richtigen Einheiten eingegeben hat
+		String[] umr = new String[] { "Radiant", "Winkelgrad", "Miles", "Kilometer", "Inches", "Zentimeter", "Celcius",
+				"Fahrenheit", "Mph", "Kmh" };
+
+		c.gridx = 0;
+		c.gridy = 0;
+		p.add(l1, c);
+		c.gridx = 1;
+		p.add(l2, c);
+
+		c.gridx = 0;
+		c.gridy = 1;
+
+		JTextArea txt_von = new JTextArea(1, 8);
+		txt_von.setMinimumSize(new Dimension(40, 15));
+		p.add(txt_von, c);
+		Textfelder_Umrechner[0] = txt_von;
+
+		c.gridx = 1;
+
+		JTextArea txt_zu = new JTextArea(1, 8);
+		txt_zu.setMinimumSize(new Dimension(40, 15));
+		p.add(txt_zu, c);
+		Textfelder_Umrechner[1] = txt_zu;
+
+		c.gridx = 0;
+		c.gridy = 2;
+		p.add(l3, c);
+
+		c.gridy = 4;
+		c.gridx = 0;
+		JTextArea txt_eingabe = new JTextArea(1, 8);
+		txt_eingabe.setMinimumSize(new Dimension(40, 15));
+		p.add(txt_eingabe, c);
+		Textfelder_Umrechner[2] = txt_eingabe;
+
+		c.gridy = 5;
+		p.add(knopf1, c);
+
+		c.gridx = 1;
+		p.add(knopf2, c);
+
+		knopf1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saub(p);
+				schließen(f);
+				saub(p1);
+				schließen(f1);
+				starten();
+			}
+
+		});
+
+		knopf2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saub(p1);
+				schließen(f1);
+				// Ist Von und Zu in umr, also sind Von und Zu Einheiten
+				boolean check1 = Arrays.asList(umr).contains(Textfelder_Umrechner[0].getText());
+				boolean check2 = Arrays.asList(umr).contains(Textfelder_Umrechner[1].getText());
+				try {
+					if (check1 && check2) {
+						Die_Umrechner_string[0] = Textfelder_Umrechner[0].getText();
+						Die_Umrechner_string[1] = Textfelder_Umrechner[1].getText();
+						Die_Umrechner[0] = Double.parseDouble(Textfelder_Umrechner[2].getText());
+					} else {
+						throw new Exception();
+					}
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(f, "Irgendetwas ist schief gelaufen!", "Fehler",
+							JOptionPane.ERROR_MESSAGE);
+					schalter = false;
+				}
+
+				if (schalter) {
+					Umrechner U = new Umrechner(Die_Umrechner[0], Die_Umrechner_string[0], Die_Umrechner_string[1]);
+					U.berech();
+					fenster(f1, 500, 100, "Ergebnis", azure2, p1, true, 440, 447);
+					JLabel l1 = new JLabel(Double.toString(U.getErg()));
+					l1.setFont(l1.getFont().deriveFont(18.0f));
+					p1.add(l1);
+				} else {
+					schalter = true;
+					saub(p);
+					schließen(f);
+					umrechner();
+				}
 			}
 
 		});
@@ -766,8 +1022,8 @@ public class Menu_TRP {
 		saub(p);
 		fenster(f, 1000, 200, "Ableitungsrechner", azure3, p, false, 0, 0);
 		p.setBackground(azure3);
-		JPanel p_abl = new JPanel(); //Lokales JPanel
-		JFrame f1 = new JFrame();	//Lokales JFrame
+		JPanel p_abl = new JPanel(); // Lokales JPanel
+		JFrame f1 = new JFrame(); // Lokales JFrame
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -830,7 +1086,7 @@ public class Menu_TRP {
 
 		});
 
-		//Liest die Koeffizienten ab
+		// Liest die Koeffizienten ab
 		knopf2.addActionListener(new ActionListener() {
 
 			@Override
@@ -888,7 +1144,7 @@ public class Menu_TRP {
 			}
 		});
 
-		//Plotter für den Ableitungsrechner
+		// Plotter für den Ableitungsrechner
 		knopf3.addActionListener(new ActionListener() {
 
 			@Override
@@ -938,7 +1194,7 @@ public class Menu_TRP {
 		int n = 0;
 		int exp = 7;
 
-		//Die Textfelder und x^7 usw. werden dem panel hinzugefügt
+		// Die Textfelder und x^7 usw. werden dem panel hinzugefügt
 		for (int i = 0; i < 7; i++) {
 			JTextArea txt = new JTextArea(1, 8);
 			txt.setMinimumSize(new Dimension(40, 15));
@@ -1090,7 +1346,7 @@ public class Menu_TRP {
 		if (!b) {
 			fst.setLocationRelativeTo(null); // Zentriert des Fenster
 		} else {
-			fst.setLocation(posx, posy); //Spezielle Angabe der Position des Fensters
+			fst.setLocation(posx, posy); // Spezielle Angabe der Position des Fensters
 		}
 	}
 
