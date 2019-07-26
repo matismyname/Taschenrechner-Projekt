@@ -22,7 +22,8 @@ public class OHK {
 	static Menu_TRP trp = new Menu_TRP();
 	static JFrame f = new JFrame();
 
-	static ImageIcon logo = new ImageIcon(OHK.class.getResource("/Logo.png")); //Selbstkreirtes Logo auf dem Startbildschirm
+	static ImageIcon logo = new ImageIcon(OHK.class.getResource("/Logo.png")); // Selbstkreirtes Logo auf dem
+										// Startbildschirm
 
 	public static void main(String[] args) {
 		OHK.starten();
@@ -33,6 +34,7 @@ public class OHK {
 		f.setLocationRelativeTo(null); // Zentriert des Fenster
 		f.setResizable(false); // Fenstergröße kann nicht vom User verändert werden
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Schließt das Fenster, wenn man auf X klickt
+		f.setTitle("Willkommen zum Taschenrechner 2.0!");
 
 		JPanel p = new JPanel(new GridBagLayout());
 		JButton knopf = new JButton("Taschenrechner");
