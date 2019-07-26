@@ -55,6 +55,7 @@ public class Hauptklasse implements BoardClickListener {
 		JTextField zahlenFeld2 = new JTextField();
 		xsend.farben(XSendAdapter.LIGHTGRAY);
 		board.addClickListener(this);
+		graphic.setLocation(230, 30);
 
 		// Mache die Symbole +, -, *, -|- größer
 		board.receiveMessage(">>fontsize 30");
@@ -125,14 +126,14 @@ public class Hauptklasse implements BoardClickListener {
 				String text1 = zahlenFeld1.getText();
 				String text2 = zahlenFeld2.getText();
 
-				//Ein kleiner Easter Egg
+				// Ein kleiner Easter Egg
 				if (text1.equals("Frohe") || text2.equals("Weihnachten")) {
 					Weihnachten weihnachten = new Weihnachten();
 					weihnachten.start();
 					return;
 				}
 
-				//Error Behandlung
+				// Error Behandlung
 				if (text1.isEmpty() || text2.isEmpty()) {
 					JOptionPane.showMessageDialog(graphic, "Bitte Zahlenwerte eingeben", "Leeres Feld",
 							JOptionPane.ERROR_MESSAGE);
@@ -148,7 +149,7 @@ public class Hauptklasse implements BoardClickListener {
 
 				else {
 					try {
-						//Wenn der User Dezimalzahlen berechnen möchte
+						// Wenn der User Dezimalzahlen berechnen möchte
 						if (e.getSource() == berechnenButton && ROP_int_aktuell == 1) {
 							double zahl1 = Double.parseDouble(text1);
 							double zahl2 = Double.parseDouble(text2);
@@ -163,8 +164,8 @@ public class Hauptklasse implements BoardClickListener {
 							dezimalErgebnis = dez.berechne();
 							JOptionPane.showMessageDialog(graphic, "Das Ergebnis ist: " + r.runde(dezimalErgebnis),
 									"Ergebnisfenster", JOptionPane.INFORMATION_MESSAGE);
-							
-							//Wenn der User Brüche errechnen möchte
+
+							// Wenn der User Brüche errechnen möchte
 						} else if (e.getSource() == berechnenButton && ROP_int_aktuell == 2) {
 							double zaehler1 = Double.parseDouble(text1.split("/")[0]);
 							double nenner1 = Double.parseDouble(text1.split("/")[1]);
@@ -202,13 +203,13 @@ public class Hauptklasse implements BoardClickListener {
 								break;
 							}
 
-							//Das Ergebnis wird gerundet
+							// Das Ergebnis wird gerundet
 							JOptionPane.showMessageDialog(graphic,
 									"Das Ergebnis ist: " + r.runde(bruchErgebnis.getZaehler()) + " / "
 											+ r.runde(bruchErgebnis.getNenner()),
 									"Ergebnisfenster", JOptionPane.INFORMATION_MESSAGE);
 
-							//Wenn der User komplexe Zahlen berechnen möchte
+							// Wenn der User komplexe Zahlen berechnen möchte
 						} else if (e.getSource() == berechnenButton && ROP_int_aktuell == 3) {
 							String komplex_zahl1 = text1;
 							String komplex_zahl2 = text2;
@@ -218,7 +219,7 @@ public class Hauptklasse implements BoardClickListener {
 							double realteil2 = 0;
 							double imaginaerteil2 = 0;
 
-							//Der User muss jede komplexe Zahl als a+ib eingeben, damit regex greifen kann
+							// Der User muss jede komplexe Zahl als a+ib eingeben, damit regex greifen kann
 							Pattern p = Pattern.compile("([+-]?[0-9]+)([+-][0-9]+)");
 
 							Matcher m1 = p.matcher(komplex_zahl1);
@@ -294,7 +295,7 @@ public class Hauptklasse implements BoardClickListener {
 			}
 		});
 
-		//Bedienungshilfen
+		// Bedienungshilfen
 		JMenu bedienungsMenu = new JMenu("Bedienung");
 		graphic.addExternMenu(bedienungsMenu);
 		JMenuItem bedienung1 = new JMenuItem("Dezimal");
@@ -340,7 +341,7 @@ public class Hauptklasse implements BoardClickListener {
 		graphic.repaint();
 	}
 
-	//Wenn z.B. plus ausgewählt wird, wird alles auf grau gesetzt und plus auf grün
+	// Wenn z.B. plus ausgewählt wird, wird alles auf grau gesetzt und plus auf grün
 	@Override
 	public void boardClick(BoardClickEvent info) {
 
