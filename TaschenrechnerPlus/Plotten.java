@@ -2,8 +2,6 @@ package TaschenrechnerPlus;
 
 import java.awt.Dimension;
 
-import javax.swing.JFrame;
-
 import plotter.Graphic;
 import plotter.Plotter;
 
@@ -88,11 +86,5 @@ public class Plotten {
 			erg = erg * x + plts[i + 2];
 		}
 		return erg;
-	}
-
-	// Funktion, die das Fenster fst schließt
-	public static void schließen(JFrame fst) {
-		fst.setVisible(false);
-		fst.dispose();
 	}
 }
