@@ -34,15 +34,17 @@ Celcius <-> Fahrenheit
 
 
 
-Diese Einheiten muss man in die oberen zwei Felder eingeben und die Zahl, die umgewandelt werden soll in das untere Feld eingeben.
+Diese Einheiten muss man in die oberen zwei Felder eingeben und die Zahl, die umgewandelt werden soll, in das untere Feld eingeben.
 
 -Beim Integral- und Ableitungsrechner gibt man einfach die Koeffizienten in die jeweiligen Felder ein und klickt dann auf ableiten bzw. integrieren. Die Funktion kann auch geplottet werden.
 
 
--Das gleiche gilt bei der Nullstellenberechnung
+-Das gleiche gilt bei der Nullstellenberechnung.
 
 
--Bei der linearen Regression gibt man die (x|y) Werte in die jeweiligen Felder ein und eine lineare Regressionsfunktion wird berechnet
+-Bei der linearen Regression gibt man die (x|y) Werte in die jeweiligen Felder ein und eine lineare Regressionsfunktion wird berechnet.
+
+
 Viel Spaß mit dem Taschenrechner!
 
 
